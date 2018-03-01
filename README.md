@@ -23,3 +23,13 @@ CREATE TABLE emp_phone (
 ) PRIMARY KEY (employee_id, phone_id)
 
 
+
+Exception: StatusRuntimeException
+Caused by: nl.topicus.jdbc.shaded.io.grpc.StatusRuntimeException: INVALID_ARGUMENT: No matching signature for operator = for argument types: STRING, BOOL. Supported signature: ANY = ANY [at 1:81]
+...emp_phone`.`PHONE_ID` FROM `emp_phone` WHERE employee_id = @p1
+                                                ^
+	at nl.topicus.jdbc.shaded.io.grpc.Status.asRuntimeException(Status.java:543) ~[spanner-jdbc-0.22.jar:na]
+	... 15 common frames omitted
+
+
+
