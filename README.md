@@ -1,12 +1,35 @@
 # spanner-jpa-example
-Example project for using JPA, Hibernate and Spring Boot with Google Cloud Spanner. This project is largely based on the example from the Spring Boot documentation (https://spring.io/guides/gs/accessing-data-jpa/).
+This project is modify to expose a exception
 
-This project relies on two other open source projects:
-* spanner-jdbc (https://github.com/olavloite/spanner-jdbc): An open source JDBC Driver for Google Cloud Spanner
-* spanner-hibernate (https://github.com/olavloite/spanner-hibernate): A Hibernate Dialect for Google Cloud Spanner
 
-The JDBC Driver that is supplied by Google for Cloud Spanner is quite limited, as it only supports SELECT-queries, and no DDL and DML statements. The JDBC Driver that is used by this example does support these kind of statements, although limited because of the underlying limitations of Google Cloud Spanner. The limitations are primarily related to the fact that Google Cloud Spanner only allow updates and deletes on one row at a time.
+In your spanner db create:
 
-The spanner-hibernate library contains a Hibernate Dialect for Google Cloud Spanner.
+CREATE TABLE employee (
+	employee_id STRING(MAX) NOT NULL,
+	lastname STRING(MAX) NOT NULL,
+	name STRING(MAX) NOT NULL,
+) PRIMARY KEY (employee_id)
 
-The example project is configured to automatically create the tables needed for the example if these do not exist. You need to update the JDBC URL in the application.properties file to reference a test database in Google Cloud Spanner under your control. The JDBC URL should also contain a reference to a credentials file for Google Cloud Spanner.
+
+CREATE TABLE phone (
+	phone_id STRING(MAX) NOT NULL,
+	nro_tel INT64,
+) PRIMARY KEY (phone_id)
+
+
+CREATE TABLE emp_phone (
+	employee_id STRING(MAX) NOT NULL,
+	phone_id STRING(MAX) NOT NULL,
+) PRIMARY KEY (employee_id, phone_id)
+
+
+
+Exception: StatusRuntimeException
+Caused by: nl.topicus.jdbc.shaded.io.grpc.StatusRuntimeException: INVALID_ARGUMENT: No matching signature for operator = for argument types: STRING, BOOL. Supported signature: ANY = ANY [at 1:81]
+...emp_phone`.`PHONE_ID` FROM `emp_phone` WHERE employee_id = @p1
+                                                ^
+	at nl.topicus.jdbc.shaded.io.grpc.Status.asRuntimeException(Status.java:543) ~[spanner-jdbc-0.22.jar:na]
+	... 15 common frames omitted
+
+
+
