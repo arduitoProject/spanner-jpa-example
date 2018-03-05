@@ -25,6 +25,7 @@ public class Employee {
                     joinColumns={ @JoinColumn(name="employee_id", referencedColumnName="employee_id") },
                     inverseJoinColumns={ @JoinColumn(name="phone_id", referencedColumnName="phone_id", unique=true) }
             )
+    @OrderColumn(name = "phone_order")
     private List<Phone> phones;
 
 
