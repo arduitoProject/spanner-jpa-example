@@ -7,10 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
-import nl.topicus.spanner.jpa.entities.Employee;
-import nl.topicus.spanner.jpa.entities.EmployeeRepository;
-import nl.topicus.spanner.jpa.entities.Phone;
-import nl.topicus.spanner.jpa.entities.PhoneRepository;
+import nl.topicus.spanner.jpa.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -33,6 +30,9 @@ public class Application
 	public CommandLineRunner demo(EmployeeRepository employeeRepo, PhoneRepository phoneRepo)
 	{
 		return (args) -> {
+
+
+			//log.info("[CREATE COMPANY]");
 			// reset repositories
 			//employeeRepo.deleteAll(); //this line too generate the error
 			//phoneRepo.deleteAll();
@@ -42,9 +42,13 @@ public class Application
 			List<Phone> phones = new ArrayList<Phone>();
 			phones.add(new Phone(getUuid(), 54111111));
 			phones.add(new Phone(getUuid(), 54222222));
-			String employeeId = employeeRepo.save(new Employee(getUuid(), "Jack", "Bauer", phones )).getEmployeeId();
+			String companyId = "AAAA";
+			Employee emp_ = employeeRepo.save(new Employee(companyId, getUuid(), "Jack", "Bauer", phones ));
 
-			Employee emp = employeeRepo.findOne(employeeId);
+
+			EmployeeId empId_ = new EmployeeId(companyId, emp_.getEmployeeId());
+
+			Employee emp = employeeRepo.findOne(empId_);
 
 			Iterator it = emp.getPhones().iterator();
 			while (it.hasNext()) {
@@ -58,17 +62,18 @@ public class Application
 			log.info("-------------------------------");
 
 
+
 			log.info("[UPDATE EMPLOYEE]");
 			phones.clear();
-			phones.add(new Phone(getUuid(), 54333333));
-			phones.add(new Phone(getUuid(), 54444444));
+			//phones.add(new Phone(getUuid(), 54333333));
+			//phones.add(new Phone(getUuid(), 54444444));
 
 			//THIS LINE PRODUCE A EXCEPTION INVALID_ARGUMENT: No matching signature for operator = for argument types: STRING, BOOL. Supported signature: ANY = ANY
-			employeeId = employeeRepo.save(new Employee(emp.getEmployeeId(), "Jack", "Nicholson", phones )).getEmployeeId();
+			Employee emp2_ = employeeRepo.save(new Employee("AAAA",emp.getEmployeeId(), "Jack", "Nicholson", phones ));
+			EmployeeId empId2_ = new EmployeeId(companyId, emp2_.getEmployeeId());
 
+			Employee empUpdate  = employeeRepo.findOne(empId2_);
 
-			Optional<Employee> resEmployeeUpdate = employeeRepo.findByEmployeeId(employeeId);
-			Employee empUpdate = resEmployeeUpdate.get();
 
 			log.info("-------------------------------");
 			log.info("[employee]>>> id: " + empUpdate.getEmployeeId() + "name: " + empUpdate.getName() + " lastname: " + empUpdate.getLastname());
