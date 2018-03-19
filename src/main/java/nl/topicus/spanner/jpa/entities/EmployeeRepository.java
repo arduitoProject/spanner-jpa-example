@@ -6,8 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface EmployeeRepository extends CrudRepository<Employee, EmployeeId> {
+public interface EmployeeRepository extends CrudRepository<Employee, Employee.Pk> {
 
-    Optional<Employee> findByEmployeeId(String id);
 
 }
